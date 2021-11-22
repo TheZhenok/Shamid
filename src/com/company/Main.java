@@ -2,7 +2,9 @@ package com.company;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
@@ -57,16 +59,33 @@ public class Main {
             int Ca = 0, Da = 0, Cb = 0, Db = 0;
             boolean falseCAndD = true;
             boolean falseP = true;
-            int m = 4 + 26;
+
+            int m;
+            System.out.println("Are you want enter key?");
+            Scanner scanner = new Scanner(System.in);
+            String userValue = scanner.nextLine();
+            System.out.println(userValue == "+");
+            if(userValue.equals("Yes") || userValue.equals("+") || userValue.equals("yes")){
+                System.out.println("Please enter key?");
+                m = scanner.nextInt();
+            }else{
+                System.out.println(userValue);
+                m = 4 + 26;
+            }
+
             int lenghtArray = 10;
             int[] mArray = new int[lenghtArray];
+            BigInteger singleValue = BigInteger.valueOf(p);
             while (falseP){
-                if((p - 1) == 0){
+                if((p - 1) == 0 || !singleValue.isProbablePrime((int)Math.log(p)) || p <= 0){
                     getRandSeed();
                     p = getRand(poolSeed[0], poolSeed[1], poolSeed[2]);
+                    singleValue = BigInteger.valueOf(p);
                 }else falseP = false;
             }
 
+            System.out.println(p);
+            Thread.sleep(5000);
             while (falseCAndD){
                 getRandSeed();
                 Ca = getRand(poolSeed[0], poolSeed[1], poolSeed[2]);
@@ -108,6 +127,7 @@ public class Main {
 
             int countArrayTrue = 0;
 
+
             for (int i = 0; i < mArray.length; i++) {
                 countArrayTrue++;
                 if(mArray[i] == 0){
@@ -127,9 +147,9 @@ public class Main {
             //x2 = x1^Cb % P
             //x3 = x2^Da % P
             //x4 = x3^Db % P
-            int[] xArray = new int[countArrayTrue];
+            int[] xArray = new int[mArray.length];
             int x1 = 0, x2 = 0, x3 = 0, x4 = 0;
-            for (int i = 0; i < countArrayTrue; i++) {
+            for (int i = 0; i < mArray.length; i++) {
                 x1 = (int)Math.pow(mArray[i], Ca) % p;
                 x2 = (int)Math.pow(x1, Cb) % p;
                 x3 = (int)Math.pow(x2, Da) % p;
@@ -147,7 +167,7 @@ public class Main {
                 }
                 System.out.println("X[" + i + "] = " + xArray[i]);
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.err.println("Enter correct value!");
         }
 
